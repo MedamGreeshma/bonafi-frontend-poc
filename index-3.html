@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CiklumGPT Live Runner & SDLC Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Updated CSS for Refactored Layout and Dark Mode */
+        :root {
+            --primary-color: #5a67d8;
+            /* Muted Blue/Purple */
+            --primary-hover: #4c57b6;
+            --secondary-color: #a0aec0;
+            /* Light Gray */
+            --success-color: #48bb78;
+            /* Green */
+            --success-hover: #38a169;
+            --error-color: #f56565;
+            /* Red */
+            --info-color: #63b3ed;
+            /* Light Blue */
+
+            /* Dark Mode Colors */
+            --dark-bg-body: #1a202c;
+            /* Dark background for body */
+            --dark-bg-primary: #2d3748;
+            /* Primary dark background (containers, sidebars) */
+            --dark-bg-secondary: #1a202c;
+            /* Secondary dark background (main content area) */
+            --dark-bg-input: #4a5568;
+            /* Input field background */
+            --dark-bg-code: #2d3748;
+            /* Code block background */
+            --dark-bg-status: #4a5568;
+            /* Status area background */
+            --dark-bg-hover: #4a5568;
+            /* Hover background */
+            --dark-bg-active: #4a5568;
+            /* Active background */
+
+            --dark-text-color: #e2e8f0;
+            /* Light text */
+            --dark-text-muted: #a0aec0;
+            /* Muted light text */
+            --dark-border-color: #4a5568;
+            /* Dark border */
+            --dark-shadow: rgba(0, 0, 0, 0.5);
+            /* Darker shadow */
+
+            --sidebar-left-width: 60px;
+            /* Narrow left sidebar */
+            --sidebar-right-width: 280px;
+            /* Right sidebar for files */
+            --shadow-sm: 0 1px 2px 0 var(--dark-shadow);
+            --shadow-md: 0 4px 6px -1px var(--dark-shadow), 0 2px 4px -2px var(--dark-shadow);
+            --border-radius: 8px;
+            /* Slightly more rounded */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: var(--dark-bg-body);
+            color: var(--dark-text-color);
+            line-height: 1.6;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .app-wrapper {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        /* Left Sidebar (Icon Bar) */
+        .sidebar-left {
+            width: var(--sidebar-left-width);
+            flex-shrink: 0;
+            background-color: var(--dark-bg-primary);
+            border-right: 1px solid var(--dark-border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            gap: 20px;
+        }
+
+        .sidebar-left .icon {
+            font-size: 1.5rem;
+            color: var(--dark-text-muted);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .sidebar-left .icon:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Content Area */
+        .main-content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-color: var(--dark-bg-secondary);
+            padding: 20px;
+            /* Padding for the main content area */
+        }
+
+        .top-section {
+            flex-shrink: 0;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            /* Keep centered for now, adjust if needed */
+            color: var(--dark-text-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.8rem;
+            /* Slightly larger title */
+        }
+
+        .input-area {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+            background-color: var(--dark-bg-primary);
+            /* Primary dark background */
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--dark-border-color);
+        }
+
+        #task-input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            font-size: 0.95rem;
+            border: 1px solid var(--dark-border-color);
+            border-radius: var(--border-radius);
+            background-color: var(--dark-bg-input);
+            color: var(--dark-text-color);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        #task-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        #task-input::placeholder {
+            color: var(--dark-text-muted);
+        }
+
+        #start-button {
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        #start-button:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+        }
+
+        #start-button:disabled {
+            background-color: var(--secondary-color);
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .status-download-area {
+            background-color: var(--dark-bg-status);
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 40px;
+            border: 1px solid var(--dark-border-color);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .status-message {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--dark-text-muted);
+            margin: 0;
+            flex-shrink: 0;
+            transition: color 0.3s ease;
+        }
+
+        /* MetaGPT Tabs */
+        .metagpt-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            /* Allow wrapping on smaller screens */
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--dark-border-color);
+            /* Separator */
+            padding-bottom: 10px;
+        }
+
+        .metagpt-tabs .tab-button {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: transparent;
+            border: 1px solid var(--dark-border-color);
+            border-radius: var(--border-radius);
+            color: var(--dark-text-muted);
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .metagpt-tabs .tab-button:hover {
+            background-color: var(--dark-bg-hover);
+            color: var(--dark-text-color);
+        }
+
+        .metagpt-tabs .tab-button.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        /* MetaGPT Output Area (contains role sections) */
+        .metagpt-output-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            /* Make this area scrollable */
+            padding-right: 10px;
+            /* Add some space for scrollbar */
+        }
+
+        /* Role Sections within the output area */
+        .role-section {
+            display: none;
+        }
+
+        .role-section.active {
+            display: block;
+        }
+
+        .role-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            color: var(--dark-text-color);
+            font-size: 1.1rem;
+            /* Slightly smaller heading in content */
+            font-weight: 600;
+            border-bottom: 1px solid var(--dark-border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .role-section h3 i {
+            color: var(--dark-text-muted);
+        }
+
+        .role-output {
+            /* No overflow-y visible here, handled by metagpt-output-area */
+            font-size: 0.9rem;
+            color: var(--dark-text-color);
+        }
+
+        .log-line {
+            color: var(--dark-text-color);
+            margin: 1px 0;
+            padding: 1px 0;
+            line-height: 1.5;
+        }
+
+        .role-log-line {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 10px 0 5px 0;
+            padding: 5px 0;
+            border-top: 1px dashed #4a5568;
+            font-size: 1em;
+        }
+
+        .role-log-line:first-child {
+            border-top: none;
+            margin-top: 0;
+        }
+
+        .content-start,
+        .content-end,
+        .code-start,
+        .code-review-start {
+            font-weight: 600;
+            margin: 12px 0 6px 0;
+            color: var(--info-color);
+            font-size: 1.05em;
+        }
+
+        .code-start span.filename,
+        .code-review-start span.filename {
+            font-weight: 400;
+            font-style: italic;
+            color: var(--dark-text-muted);
+            margin-left: 8px;
+        }
+
+        .code-block,
+        .content-block,
+        .code-review-block,
+        .sdd-output-block {
+            background-color: var(--dark-bg-code);
+            border: 1px solid var(--dark-border-color);
+            border-left: 4px solid var(--primary-color);
+            padding: 12px 18px;
+            margin: 10px 0 15px 0;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border-radius: var(--border-radius);
+            line-height: 1.65;
+            color: var(--dark-text-color);
+        }
+
+        .sdd-output-block {
+            /* SDLC output will be in the right sidebar, this class might be reused or removed */
+            /* Keeping it for now, but its usage will change */
+            border-left-color: var(--info-color);
+        }
+
+        .sdd-output-block.loading {
+            font-style: italic;
+            color: var(--dark-text-muted);
+        }
+
+        .sdd-output-block.error {
+            border-left-color: var(--error-color);
+            color: var(--error-color);
+        }
+
+
+        .action-log-line {
+            color: var(--dark-text-muted);
+            font-style: italic;
+            margin: 3px 0 3px 10px;
+            font-size: 0.9em;
+            padding: 2px 0;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .action-log-line::before {
+            content: "\f0da";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 3px;
+            font-size: 0.8em;
+            color: var(--secondary-color);
+        }
+
+        .action-log-line .action-target {
+            font-weight: 500;
+            color: var(--dark-text-color);
+        }
+
+        .original-role {
+            font-style: italic;
+            color: var(--dark-text-muted);
+            font-size: 0.85em;
+            margin-left: 8px;
+        }
+
+        .status-message.process-end {
+            font-weight: 600;
+            color: var(--success-color);
+        }
+
+        .status-message.error-message {
+            font-weight: 600;
+            color: var(--error-color);
+        }
+
+        .log-line.error {
+            color: var(--error-color);
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        /* Right Sidebar (Files in this chat) */
+        .sidebar-right {
+            width: var(--sidebar-right-width);
+            flex-shrink: 0;
+            background-color: var(--dark-bg-primary);
+            border-left: 1px solid var(--dark-border-color);
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-right h3 {
+            color: var(--dark-text-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--dark-border-color);
+        }
+
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--dark-border-color);
+            color: var(--dark-text-color);
+            font-size: 0.9rem;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-item .file-name {
+            flex-grow: 1;
+            margin-right: 10px;
+            word-break: break-all;
+            /* Prevent long names from overflowing */
+        }
+
+        .file-item .download-icon {
+            color: var(--info-color);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .file-item .download-icon:hover {
+            color: var(--info-color);
+            /* Keep info color, maybe slightly lighter */
+            opacity: 0.8;
+        }
+
+        /* Hide original download areas */
+        #all-download-links {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-wrapper">
+        <div class="sidebar-left">
+            <i class="fas fa-bars icon"></i>
+            <i class="fas fa-search icon"></i>
+        </div>
+
+        <div class="main-content-wrapper">
+            <div class="top-section">
+                <h2>CiklumGPT Live Runner</h2>
+                <div class="input-area">
+                    <input type="text" id="task-input" placeholder="Enter your task"
+                        value="Create a snake game using pygame">
+                    <button id="start-button" onclick="startProcess()">
+                        <i class="fas fa-play"></i> Start Generation
+                    </button>
+                </div>
+                <div class="status-download-area">
+                    <div class="status-message" id="status">Enter project description and click Start</div>
+                    <div id="all-download-links">
+                        <div id="download-link-area" class="download-link-area">
+                            <a href="#" id="metagpt-zip-download-link" class="download-link" download> <i
+                                    class="fas fa-file-archive"></i> CiklumGPT ZIP
+                            </a>
+                        </div>
+                        <div id="brd-download-link-area" class="download-link-area">
+                            <a href="#" id="brd-download-link" class="download-link" download>
+                                <i class="fas fa-file-word"></i> BRD.docx
+                            </a>
+                        </div>
+                        <div id="srs-download-link-area" class="download-link-area">
+                            <a href="#" id="srs-download-link" class="download-link" download>
+                                <i class="fas fa-file-word"></i> SRS.docx
+                            </a>
+                        </div>
+                        <div id="usecase-download-link-area" class="download-link-area">
+                            <a href="#" id="usecase-download-link" class="download-link" download>
+                                <i class="fas fa-file-word"></i> UseCase.docx
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metagpt-tabs" id="metagpt-tabs">
+                <div class="tab-button active" data-section="section-system-logs">System / Other Logs</div>
+                <div class="tab-button" data-section="section-product-management">Product Management</div>
+                <div class="tab-button" data-section="section-architecture-design">Architecture & Design</div>
+                <div class="tab-button" data-section="section-project-management">Project Management</div>
+                <div class="tab-button" data-section="section-code-dev-review">Code & Review</div>
+            </div>
+
+            <div class="metagpt-output-area" id="main-content-area">
+                <div class="role-section active" id="section-system-logs">
+                    <h3><i class="fas fa-terminal"></i> System / Other Logs</h3>
+                    <div class="role-output" id="output-system-logs"></div>
+                </div>
+                <div class="role-section" id="section-product-management">
+                    <h3><i class="fas fa-file-alt"></i> Product Management (PRD)</h3>
+                    <div class="role-output" id="output-product-management"></div>
+                </div>
+                <div class="role-section" id="section-architecture-design">
+                    <h3><i class="fas fa-sitemap"></i> Architecture & Design</h3>
+                    <div class="role-output" id="output-architecture-design"></div>
+                </div>
+                <div class="role-section" id="section-project-management">
+                    <h3><i class="fas fa-tasks"></i> Project Management (Tasks)</h3>
+                    <div class="role-output" id="output-project-management"></div>
+                </div>
+                <div class="role-section" id="section-code-dev-review">
+                    <h3><i class="fas fa-code"></i> Code Generation & Review</h3>
+                    <div class="role-output" id="output-code-dev-review"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="sidebar-right">
+            <h3>Files in this chat</h3>
+            <ul class="file-list" id="file-list">
+            </ul>
+            <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid var(--dark-border-color);">
+                <a href="#" id="download-all-files-link" class="download-link"
+                    style="background-color: var(--secondary-color); width: 100%; text-align: center; justify-content: center;"
+                    download>
+                    <i class="fas fa-download"></i> Download all files
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Base Variables (Original + SDLC + New UI) ---
+        let socket;
+        const statusDiv = document.getElementById("status");
+        const taskInput = document.getElementById("task-input");
+        const startButton = document.getElementById("start-button");
+        // const mainContentArea = document.getElementById("main-content-area"); // This now refers to metagpt-output-area
+        const metagptOutputArea = document.getElementById("main-content-area"); // Renamed for clarity
+        const metagptTabs = document.getElementById("metagpt-tabs");
+        const fileList = document.getElementById("file-list");
+        const downloadAllFilesLink = document.getElementById("download-all-files-link");
+
+
+        // MetaGPT Download Area/Link (Original IDs - kept but hidden in UI)
+        const metagptDownloadArea = document.getElementById("download-link-area");
+        const metagptDownloadLink = document.getElementById("metagpt-zip-download-link");
+
+        // SDLC Download Areas & Links (Original IDs - kept but hidden in UI)
+        const brdDownloadArea = document.getElementById("brd-download-link-area");
+        const brdDownloadLink = document.getElementById("brd-download-link");
+        const srsDownloadArea = document.getElementById("srs-download-link-area");
+        const srsDownloadLink = document.getElementById("srs-download-link");
+        const usecaseDownloadArea = document.getElementById("usecase-download-link-area");
+        const usecaseDownloadLink = document.getElementById("usecase-download-link");
+        // Combine all download areas for easier hiding/showing checks (still used internally)
+        const allDownloadAreas = [metagptDownloadArea, brdDownloadArea, srsDownloadArea, usecaseDownloadArea];
+
+        // Combined Output Divs (MetaGPT only now)
+        const outputDivs = {
+            'system-logs': document.getElementById('output-system-logs'),
+            'product-management': document.getElementById('output-product-management'),
+            'architecture-design': document.getElementById('output-architecture-design'),
+            'project-management': document.getElementById('output-project-management'),
+            'code-dev-review': document.getElementById('output-code-dev-review'),
+            // SDLC Output Divs are no longer here, their content goes to the file list
+        };
+
+        // MetaGPT State Variables (Original)
+        let activePreBlocks = {};
+        let preBlockCounter = 0;
+
+        // --- Tab switching logic (Handles MetaGPT tabs) ---
+        const tabButtons = document.querySelectorAll('.metagpt-tabs .tab-button');
+        const metagptSections = document.querySelectorAll('.metagpt-output-area .role-section'); // Select sections within the new output area
+        let activeSectionId = 'section-system-logs'; // Initial active section
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const sectionIdToShow = button.getAttribute('data-section');
+                if (sectionIdToShow === activeSectionId) return;
+
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                metagptSections.forEach(sec => sec.classList.remove('active')); // Hide sections within output area
+
+                button.classList.add('active');
+                const sectionElement = document.getElementById(sectionIdToShow);
+                if (sectionElement) {
+                    sectionElement.classList.add('active');
+                    activeSectionId = sectionIdToShow;
+                    metagptOutputArea.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll the MetaGPT output area
+                } else {
+                    console.error("Could not find section:", sectionIdToShow);
+                }
+            });
+        });
+
+        // --- Mapping logic (Original MetaGPT version - directs to correct output div) ---
+        function getTargetSectionId(data) {
+            const roleName = data.role || "System";
+            const type = data.type;
+
+            if (roleName.includes('Engineer')) return 'section-code-dev-review';
+            if (type === 'code_start' || type === 'code_review_start' || type === 'code_line') return 'section-code-dev-review';
+            if (roleName.includes('Product Manager')) return 'section-product-management';
+            if (roleName.includes('Architect')) return 'section-architecture-design';
+            if (roleName.includes('Project Manager')) return 'section-project-management';
+
+            // Heuristics for content (Original less specific version)
+            if ((type === 'content_start' || type === 'content_end' || type === 'content_line')) {
+                const content = data.content || "";
+                if (content.includes('"Product Goals"') || content.includes('"User Stories"')) return 'section-product-management';
+                if (content.includes('"File list"') || content.includes('"Data structures and interfaces"')) return 'section-architecture-design';
+                if (content.includes('"Task list"') || content.includes('"Logic Analysis"')) return 'section-project-management';
+            }
+            return 'section-system-logs'; // Default
+        }
+
+        // --- Helper: Replace MetaGPT in strings (Original version) ---
+        function replaceMetaWithCiklum(text) {
+            if (typeof text === 'string') {
+                return text.replace(/metagpt/gi, "CiklumGPT");
+            }
+            return text;
+        }
+
+        // --- Helper: Escape HTML ---
+        function escapeHTML(str) {
+            if (typeof str !== 'string') {
+                console.warn("escapeHTML received non-string:", str);
+                str = String(str);
+            }
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // --- Helper: Create display elements (Original MetaGPT version) ---
+        function createMessageElement(data, originalRole, targetSectionId) {
+            let element;
+            let displayContent = replaceMetaWithCiklum(data.content);
+            let displayFilename = replaceMetaWithCiklum(data.filename);
+            let displayAction = replaceMetaWithCiklum(data.action);
+            let displayTarget = replaceMetaWithCiklum(data.target);
+            let displayOriginalRole = replaceMetaWithCiklum(originalRole);
+
+            let showOriginalRole = false;
+            // Determine if original role should be shown (e.g., if System log is about another role)
+            if (targetSectionId === 'section-code-dev-review' && !displayOriginalRole?.includes('Engineer')) showOriginalRole = true;
+            else if (targetSectionId === 'section-product-management' && !displayOriginalRole?.includes('Product Manager')) showOriginalRole = true;
+            else if (targetSectionId === 'section-architecture-design' && !displayOriginalRole?.includes('Architect')) showOriginalRole = true;
+            else if (targetSectionId === 'section-project-management' && !displayOriginalRole?.includes('Project Manager')) showOriginalRole = true;
+            else if (targetSectionId === 'section-system-logs' && displayOriginalRole !== 'System') showOriginalRole = true;
+            if (displayOriginalRole === 'System' && targetSectionId === 'section-system-logs') showOriginalRole = false; // Don't show System (System)
+
+
+            const roleSpan = showOriginalRole ? ` <span class="original-role">(${escapeHTML(displayOriginalRole || 'Unknown Role')})</span>` : '';
+
+            switch (data.type) {
+                case 'role_log':
+                    element = document.createElement('p');
+                    element.classList.add('role-log-line');
+                    element.innerHTML = escapeHTML(displayContent) + roleSpan;
+                    break;
+                case 'log':
+                    element = document.createElement('p');
+                    element.classList.add('log-line');
+                    if (data.content && data.content.toLowerCase().includes('error')) {
+                        element.classList.add('error');
+                    }
+                    element.innerHTML = escapeHTML(displayContent) + roleSpan;
+                    break;
+                case 'content_start':
+                    element = document.createElement('p');
+                    element.classList.add('content-start');
+                    element.innerHTML = "[CONTENT]" + roleSpan;
+                    break;
+                case 'content_end':
+                    element = document.createElement('p');
+                    element.classList.add('content-end');
+                    element.innerHTML = "[/CONTENT]" + roleSpan;
+                    break;
+                case 'code_start':
+                    element = document.createElement('p');
+                    element.classList.add('code-start');
+                    element.innerHTML = `## Code: <span class="filename">${escapeHTML(displayFilename || '...')}</span>` + roleSpan;
+                    break;
+                case 'code_review_start':
+                    element = document.createElement('p');
+                    element.classList.add('code-review-start');
+                    element.innerHTML = `## Code Review: <span class="filename">${escapeHTML(displayFilename || '...')}</span>` + roleSpan;
+                    break;
+                case 'action_log':
+                    element = document.createElement('p');
+                    element.classList.add('action-log-line');
+                    let actionText = `${escapeHTML(displayAction || 'Action')}: `;
+                    if (displayTarget) { actionText += `<span class="action-target">${escapeHTML(displayTarget)}</span>`; }
+                    else { actionText += escapeHTML(displayContent); } // Fallback
+                    element.innerHTML = actionText + roleSpan;
+                    break;
+                default:
+                    console.warn(`createMessageElement called with unexpected type: ${data.type}`);
+                    element = document.createElement('p');
+                    element.classList.add('log-line', 'error');
+                    element.innerHTML = `[${escapeHTML(data.type)}] ${escapeHTML(displayContent)}` + roleSpan;
+                    break;
+            }
+            return element;
+        }
+
+        // --- Helper: Manage block state (Original MetaGPT version) ---
+        function manageBlockState(data, sectionId, outputDiv) {
+            const currentBlock = activePreBlocks[sectionId];
+            const displayContent = replaceMetaWithCiklum(data.content);
+
+            // Block Start conditions
+            if (data.type === 'content_start' || data.type === 'code_start' || data.type === 'code_review_start') {
+                delete activePreBlocks[sectionId]; // Clear previous block in this section first
+                const pre = document.createElement('pre');
+                let blockType = '';
+                if (data.type === 'content_start') { pre.classList.add('content-block'); blockType = 'content'; }
+                else if (data.type === 'code_start') { pre.classList.add('code-block'); blockType = 'code'; }
+                else if (data.type === 'code_review_start') { pre.classList.add('code-review-block'); blockType = 'review'; }
+                pre.id = `pre-${sectionId}-${preBlockCounter++}`;
+                outputDiv.appendChild(pre);
+                activePreBlocks[sectionId] = { type: blockType, element: pre };
+                return false; // Don't append the marker line itself
+            }
+
+            // Block End condition (Content only)
+            if (data.type === 'content_end') {
+                if (currentBlock && currentBlock.type === 'content') {
+                    delete activePreBlocks[sectionId];
+                } else {
+                    console.warn(`Received content_end for section ${sectionId} but no 'content' block was active.`);
+                }
+                return false; // Don't append marker line
+            }
+
+            // Implicit Block End conditions (Code/Review on new block start or role change)
+            if (data.type === 'role_log' || data.type === 'content_start' || data.type === 'code_start' || data.type === 'code_review_start') {
+                if (currentBlock && (currentBlock.type === 'code' || currentBlock.type === 'review')) {
+                    delete activePreBlocks[sectionId];
+                }
+                return false; // Let createMessageElement handle the new line
+            }
+
+            // Append line to active block
+            if (data.type === 'content_line' || data.type === 'code_line') {
+                if (currentBlock) {
+                    const isCorrectType = (currentBlock.type === 'content' && data.type === 'content_line') ||
+                        ((currentBlock.type === 'code' || currentBlock.type === 'review') && data.type === 'code_line');
+                    if (isCorrectType) {
+                        currentBlock.element.textContent += displayContent + '\n';
+                        if (`section-${outputDiv.id.replace('output-', '').toLowerCase()}` === activeSectionId) {
+                            metagptOutputArea.scrollTo({ top: metagptOutputArea.scrollHeight, behavior: 'auto' }); // Scroll the MetaGPT output area
+                        }
+                        return true; // Handled by appending
+                    } else {
+                        console.warn(`%cTYPE MISMATCH: Received ${data.type} for section ${sectionId}, but active block is ${currentBlock.type}. Ignoring append.`, 'color: orange;');
+                        return false; // Don't append, let createMessageElement handle as log
+                    }
+                } else {
+                    console.error(`%cSTATE ERROR: Received ${data.type} for section ${sectionId}, but NO currentBlock found! Line ignored.`, 'color: orange; font-weight: bold;', JSON.stringify(activePreBlocks));
+                    return false; // Let createMessageElement handle as log
+                }
+            }
+
+            return false; // Not handled by block state management
+        }
+
+
+        // --- Main Function to Start Process (Original + SDLC Integration) ---
+        function startProcess() {
+            const task = taskInput.value.trim();
+            if (!task) {
+                alert("Please enter a project description.");
+                return;
+            }
+
+            // --- Reset UI (Combined) ---
+            statusDiv.textContent = "Initializing...";
+            statusDiv.className = 'status-message';
+            // Clear MetaGPT outputs
+            Object.keys(outputDivs)
+                .forEach(key => { if (outputDivs[key]) outputDivs[key].innerHTML = ''; });
+            // Clear file list
+            fileList.innerHTML = '';
+
+            activePreBlocks = {}; // Reset MetaGPT block state
+            preBlockCounter = 0;
+
+            // Hide original download links (they are now in the right sidebar)
+            allDownloadAreas.forEach(area => area.classList.remove('visible'));
+            downloadAllFilesLink.style.display = 'none'; // Hide download all until files are ready
+
+            startButton.disabled = true;
+            taskInput.disabled = true;
+
+            // Reset view to default (System Logs tab)
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            metagptSections.forEach(sec => sec.classList.remove('active'));
+            const defaultTabButton = document.querySelector('.metagpt-tabs .tab-button[data-section="section-system-logs"]');
+            const defaultSection = document.getElementById('section-system-logs');
+            if (defaultTabButton) defaultTabButton.classList.add('active');
+            if (defaultSection) defaultSection.classList.add('active');
+            activeSectionId = 'section-system-logs';
+            metagptOutputArea.scrollTo({ top: 0 });
+
+
+            // --- Start MetaGPT via WebSocket (Original Logic) ---
+            const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+            const wsUrl = `${wsProtocol}//${window.location.host}/ws`;
+            console.log("Connecting to WebSocket:", wsUrl);
+            if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
+                socket.close();
+                console.log("Closed previous WebSocket connection.");
+            }
+            socket = new WebSocket(wsUrl);
+
+            socket.onopen = function () {
+                statusDiv.textContent = "Connection open. Starting CiklumGPT & SDLC Generation...";
+                console.log("WebSocket connection opened. Sending task:", task);
+                socket.send(task);
+            };
+
+            // Assign original handlers
+            socket.onmessage = function (event) {
+                let data;
+                try { data = JSON.parse(event.data); } catch (e) { console.error("Failed to parse JSON:", event.data, e); return; }
+
+                // Update status only if process not finished/errored
+                if (!statusDiv.classList.contains('process-end') && !statusDiv.classList.contains('error-message')) {
+                    const displayRole = replaceMetaWithCiklum(data.role || 'System');
+                    if (data.type !== 'content_line' && data.type !== 'code_line') {
+                        statusDiv.textContent = `Running: ${displayRole}...`;
+                    }
+                    statusDiv.className = 'status-message'; // Reset style
+                }
+
+                // Handle Special Final Messages (Original Logic - adapted for new UI)
+                if (['process_end', 'error', 'zip_ready'].includes(data.type)) {
+                    handleFinalMessage(data);
+                }
+                // Handle Regular Messages (Original Logic - directs to MetaGPT output area)
+                else {
+                    const targetSectionId = getTargetSectionId(data);
+                    const outputDivKey = targetSectionId.replace('section-', '');
+                    const outputDiv = outputDivs[outputDivKey]; // Get the correct output div element
+                    const originalRole = data.role || "System";
+                    if (!outputDiv) { console.error(`No outputDiv for key: ${outputDivKey}`); return; }
+
+                    let elementToAppend = null;
+                    const handledByBlockState = manageBlockState(data, targetSectionId, outputDiv);
+
+                    if (!handledByBlockState || ['content_start', 'content_end', 'code_start', 'code_review_start', 'role_log', 'action_log'].includes(data.type)) {
+                        elementToAppend = createMessageElement(data, originalRole, targetSectionId);
+                    }
+
+                    if (elementToAppend) {
+                        outputDiv.appendChild(elementToAppend);
+                        // Scroll the active MetaGPT output section if it's currently visible
+                        if (`section-${outputDiv.id.replace('output-', '').toLowerCase()}` === activeSectionId) {
+                            metagptOutputArea.scrollTo({ top: metagptOutputArea.scrollHeight, behavior: 'auto' });
+                        }
+                    }
+                }
+            }; // End socket.onmessage
+
+            socket.onclose = function (event) { handleSocketClose(event); }; // Original handler
+            socket.onerror = function (error) { handleSocketError(error); }; // Original handler
+
+
+            // --- Start SDLC Document Generation (New Part - Output to File List) ---
+            streamDocument("Business Requirements Document (BRD)", "brd"); // Pass outputId key
+            streamDocument("System Requirements Specification (SRS)", "srs");
+            streamDocument("Use Case Document", "usecase");
+
+        } // end startProcess
+
+
+        // --- Function to Stream SDLC Documents (New Part - Output to File List) ---
+        async function streamDocument(docType, outputIdKey) { // outputIdKey is 'brd', 'srs', 'usecase'
+            // We don't stream text to a main area div anymore, just update the file list
+            const docKey = docType.replace(/ /g, '_').replace(/\//g, '_').replace(/\(|\)/g, ''); // Match backend key generation, remove parentheses
+
+            // Add a placeholder item to the file list
+            const listItem = document.createElement('li');
+            listItem.classList.add('file-item');
+            listItem.id = `file-item-${outputIdKey}`;
+            listItem.innerHTML = `<span class="file-name">${escapeHTML(docType)} (Generating...)</span><i class="fas fa-spinner fa-spin"></i>`;
+            fileList.appendChild(listItem);
+
+            console.log(`Requesting generation for: ${docType}`);
+            try {
+                const response = await fetch(`/generate/${encodeURIComponent(docType)}?project_desc=${encodeURIComponent(taskInput.value.trim())}`);
+
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+
+                // Assuming the response is the final content or a success signal
+                // For streaming text, we'd read the body, but for a file, we just need the download link
+                // Let's assume the backend now just confirms success and provides the download link
+
+                // Update the list item with the download link
+                const downloadUrl = `/download/sdd/${docKey}`;
+                listItem.innerHTML = `<span class="file-name">${escapeHTML(docType)}.docx</span><a href="${downloadUrl}" download="${docKey}.docx"><i class="fas fa-download download-icon"></i></a>`;
+                listItem.classList.remove('loading'); // Remove loading state if any was added
+
+                checkCompletionState(); // Check overall completion
+
+            } catch (error) {
+                console.error(`Error fetching or streaming ${docType}:`, error);
+                listItem.innerHTML = `<span class="file-name">${escapeHTML(docType)} (Error)</span><i class="fas fa-exclamation-circle" style="color: var(--error-color);"></i>`;
+                listItem.classList.remove('loading');
+                listItem.classList.add('error');
+
+                if (!statusDiv.classList.contains('error-message')) {
+                    statusDiv.textContent = `Error during ${docType} generation.`;
+                    statusDiv.className = 'status-message error-message';
+                }
+                checkCompletionState(); // Check completion even on error
+            }
+        }
+
+
+        // --- Separate handlers for final messages and socket events (Original MetaGPT Handlers - adapted) ---
+        function handleFinalMessage(data) {
+            let displayContent = replaceMetaWithCiklum(data.content);
+            let displayFilename = replaceMetaWithCiklum(data.filename);
+
+            if (data.type === 'process_end') {
+                // Update status only if not already showing error or zip ready
+                if (!statusDiv.classList.contains('error-message') && !metagptDownloadArea.classList.contains('visible')) {
+                    statusDiv.textContent = displayContent || "CiklumGPT process finished.";
+                }
+                console.log("MetaGPT process finished signal received (waiting for potential ZIP/SDLC docs)");
+            } else if (data.type === 'error') {
+                statusDiv.textContent = `Error: ${displayContent}`;
+                statusDiv.className = 'status-message error-message';
+                Object.keys(activePreBlocks).forEach(id => delete activePreBlocks[id]);
+                console.error("Received error from backend:", displayContent);
+            } else if (data.type === 'zip_ready') {
+                // Update status only if not already showing error
+                if (!statusDiv.classList.contains('error-message')) {
+                    statusDiv.textContent = "CiklumGPT Project ZIP ready."; // Status updated, not necessarily "Success!" yet
+                }
+                // Add MetaGPT ZIP to the file list
+                const listItem = document.createElement('li');
+                listItem.classList.add('file-item');
+                listItem.id = `file-item-metagpt-zip`;
+                const downloadUrl = data.download_url; // Use the URL from the message
+                const filename = displayFilename || 'ciklumgpt_project.zip';
+                listItem.innerHTML = `<span class="file-name">${escapeHTML(filename)}</span><a href="${downloadUrl}" download="${filename}"><i class="fas fa-download download-icon"></i></a>`;
+                fileList.appendChild(listItem);
+
+                metagptDownloadArea.classList.add('visible'); // Keep this for checkCompletionState logic
+                console.log("MetaGPT ZIP Ready:", downloadUrl);
+            }
+            checkCompletionState(); // Check completion whenever a final message arrives
+        }
+
+        function handleSocketClose(event) {
+            const reason = event.reason ? `, reason=${event.reason}` : '';
+            if (!statusDiv.classList.contains('process-end') && !statusDiv.classList.contains('error-message')) {
+                if (!event.wasClean) {
+                    statusDiv.textContent = `Connection died unexpectedly, code=${event.code}${reason}`;
+                    statusDiv.className = 'status-message error-message';
+                }
+            }
+            Object.keys(activePreBlocks).forEach(id => delete activePreBlocks[id]);
+            console.warn("WebSocket connection closed:", event);
+            checkCompletionState(); // Check completion when socket closes
+        }
+
+        function handleSocketError(error) {
+            if (!statusDiv.classList.contains('error-message')) {
+                statusDiv.textContent = 'WebSocket Error! Check console.';
+                statusDiv.className = 'status-message error-message';
+            }
+            Object.keys(activePreBlocks).forEach(id => delete activePreBlocks[id]);
+            console.error("WebSocket error:", error);
+            checkCompletionState(); // Check completion on error
+        }
+
+        // --- Check Completion State (New Part - Integrated with original handlers) ---
+        function checkCompletionState() {
+            // Check if MetaGPT part is done (ZIP added to list or WS closed after process_end/error)
+            // We can check if the metagpt-zip-download-link's href is set, as handleFinalMessage sets it
+            const metagptZipReady = metagptDownloadLink.href !== '#';
+            const wsClosed = !socket || socket.readyState === WebSocket.CLOSED;
+            const metagptLikelyDone = metagptZipReady || wsClosed;
+
+            // Check if all SDLC docs are done (items in file list are not loading/error)
+            const sdlcOutputKeys = ['brd', 'srs', 'usecase'];
+            const sdlcItems = sdlcOutputKeys.map(key => document.getElementById(`file-item-${key}`));
+            const sdlcAllDone = sdlcItems.every(item => item && !item.classList.contains('loading') && !item.classList.contains('error'));
+
+            // Check for any errors in status or file list
+            const anySdlcError = sdlcItems.some(item => item && item.classList.contains('error'));
+            const overallError = statusDiv.classList.contains('error-message');
+
+            if (metagptLikelyDone && sdlcAllDone) {
+                console.log("All processes appear complete.");
+                if (overallError || anySdlcError) {
+                    if (!overallError) {
+                        statusDiv.textContent = 'Process finished with errors.'; // More general error message
+                        statusDiv.className = 'status-message error-message';
+                    }
+                } else {
+                    statusDiv.textContent = 'All processes finished. Downloads ready.';
+                    statusDiv.className = 'status-message process-end';
+                }
+                // Show the "Download all files" button
+                downloadAllFilesLink.style.display = 'flex'; // Use flex to maintain layout
+
+                // Re-enable button once all processes are accounted for (success or fail)
+                startButton.disabled = false;
+                taskInput.disabled = false;
+            } else {
+                console.log("Completion check: Not all processes finished yet.", { metagptLikelyDone, sdlcAllDone, anySdlcError, overallError });
+            }
+        }
+
+        // Initial setup: Hide download all button
+        downloadAllFilesLink.style.display = 'none';
+
+        // TODO: Implement logic for "Download All Files" link if backend supports it
+        // This would likely require a new backend endpoint that zips all generated files.
+        // For now, the link is just shown but might not work without backend support.
+        downloadAllFilesLink.addEventListener('click', (event) => {
+            // Prevent default if no files are available or if backend doesn't support it yet
+            // For now, just log a message
+            console.log("Download All Files clicked. Backend support needed.");
+            // event.preventDefault(); // Uncomment this if backend doesn't support it
+        });
+
+
+    </script>
+</body>
+
+</html>
