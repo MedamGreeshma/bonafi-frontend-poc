@@ -25,19 +25,19 @@
             /* Light Blue */
 
             /* Dark Mode Colors */
-            --dark-bg-body: #1a202c;
+            --dark-bg-body: #000;
             /* Dark background for body */
-            --dark-bg-primary: #2d3748;
+            --dark-bg-primary: #000;
             /* Primary dark background (containers, sidebars) */
-            --dark-bg-secondary: #1a202c;
+            --dark-bg-secondary: #3C3C3C;
             /* Secondary dark background (main content area) */
-            --dark-bg-input: #4a5568;
+            --dark-bg-input: #454545;
             /* Input field background */
             --dark-bg-code: #2d3748;
             /* Code block background */
-            --dark-bg-status: #4a5568;
+            --dark-bg-status: rgb(41, 41, 41);
             /* Status area background */
-            --dark-bg-hover: #4a5568;
+            --dark-bg-hover: #313131;
             /* Hover background */
             --dark-bg-active: #4a5568;
             /* Active background */
@@ -46,7 +46,7 @@
             /* Light text */
             --dark-text-muted: #a0aec0;
             /* Muted light text */
-            --dark-border-color: #4a5568;
+            --dark-border-color: #6d6d6d;
             /* Dark border */
             --dark-shadow: rgba(0, 0, 0, 0.5);
             /* Darker shadow */
@@ -59,6 +59,7 @@
             --shadow-md: 0 4px 6px -1px var(--dark-shadow), 0 2px 4px -2px var(--dark-shadow);
             --border-radius: 8px;
             /* Slightly more rounded */
+            --input-border-radius: 16px;
         }
 
         * {
@@ -126,11 +127,11 @@
         }
 
         h2 {
-            text-align: center;
+            text-align: left;
             /* Keep centered for now, adjust if needed */
             color: var(--dark-text-color);
             margin-bottom: 15px;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 1.8rem;
             /* Slightly larger title */
         }
@@ -139,12 +140,11 @@
             display: flex;
             gap: 15px;
             margin-bottom: 15px;
-            align-items: center;
-            background-color: var(--dark-bg-primary);
+            align-items: flex-end;
+            background-color: var(--dark-bg-input);
             /* Primary dark background */
-            padding: 12px 20px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
+            padding: 16px 8px;
+            border-radius: var(--input-border-radius);
             border: 1px solid var(--dark-border-color);
         }
 
@@ -152,12 +152,12 @@
             flex-grow: 1;
             padding: 10px 15px;
             font-size: 0.95rem;
-            border: 1px solid var(--dark-border-color);
-            border-radius: var(--border-radius);
-            background-color: var(--dark-bg-input);
+            border: none;
+            background: transparent;
             color: var(--dark-text-color);
             outline: none;
             transition: border-color 0.2s ease;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
         }
 
         #task-input:focus {
@@ -203,18 +203,22 @@
             justify-content: space-between;
             align-items: center;
             min-height: 40px;
-            border: 1px solid var(--dark-border-color);
+            /* border: 1px solid var(--dark-border-color); */
             flex-wrap: wrap;
             gap: 10px;
         }
 
         .status-message {
             font-size: 0.95rem;
-            font-weight: 500;
+            font-weight: 300;
             color: var(--dark-text-muted);
             margin: 0;
             flex-shrink: 0;
             transition: color 0.3s ease;
+        }
+
+        .status-message i {
+            margin-right: 9px;
         }
 
         /* MetaGPT Tabs */
@@ -224,7 +228,7 @@
             /* Allow wrapping on smaller screens */
             gap: 10px;
             margin-bottom: 15px;
-            border-bottom: 1px solid var(--dark-border-color);
+            /* border-bottom: 1px solid var(--dark-border-color); */
             /* Separator */
             padding-bottom: 10px;
         }
@@ -234,9 +238,14 @@
             font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
-            background-color: transparent;
-            border: 1px solid var(--dark-border-color);
+            background-color: var(--dark-bg-input);
             border-radius: var(--border-radius);
+            color: var(--dark-text-muted);
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .metagpt-tabs .tab-button i {
+            margin-right: 5px;
             color: var(--dark-text-muted);
             transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
         }
@@ -247,9 +256,14 @@
         }
 
         .metagpt-tabs .tab-button.active {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
+            background-color: var(--dark-bg-body);
             color: white;
+        }
+
+        .metagpt-tabs .tab-button.active i {
+            margin-right: 5px;
+            color: var(--success-color);
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
         }
 
         /* MetaGPT Output Area (contains role sections) */
@@ -494,16 +508,17 @@
 
         <div class="main-content-wrapper">
             <div class="top-section">
-                <h2>CiklumGPT Live Runner</h2>
+                <h2 class="heading">CiklumGPT Live Runner</h2>
                 <div class="input-area">
-                    <input type="text" id="task-input" placeholder="Enter your task"
-                        value="Create a snake game using pygame">
+                    <textarea type="text" id="task-input" placeholder="Enter your task"
+                        value="Create a snake game using pygame" rows="2"></textarea>
                     <button id="start-button" onclick="startProcess()">
-                        <i class="fas fa-play"></i> Start Generation
+                        <i class="fa-solid fa-paper-plane"></i>
                     </button>
                 </div>
                 <div class="status-download-area">
-                    <div class="status-message" id="status">Enter project description and click Start</div>
+                    <div class="status-message" id="status"><i class="fa-solid fa-circle-info"></i> Enter project
+                        description and click Start</div>
                     <div id="all-download-links">
                         <div id="download-link-area" class="download-link-area">
                             <a href="#" id="metagpt-zip-download-link" class="download-link" download> <i
@@ -530,11 +545,17 @@
             </div>
 
             <div class="metagpt-tabs" id="metagpt-tabs">
-                <div class="tab-button active" data-section="section-system-logs">System / Other Logs</div>
-                <div class="tab-button" data-section="section-product-management">Product Management</div>
-                <div class="tab-button" data-section="section-architecture-design">Architecture & Design</div>
-                <div class="tab-button" data-section="section-project-management">Project Management</div>
-                <div class="tab-button" data-section="section-code-dev-review">Code & Review</div>
+                <div class="tab-button active" data-section="section-system-logs"><i class="fas fa-terminal"></i> System
+                    / Other Logs</div>
+                <div class="tab-button" data-section="section-product-management"><i class="fas fa-file-alt"></i>
+                    Product
+                    Management</div>
+                <div class="tab-button" data-section="section-architecture-design"><i class="fas fa-sitemap"></i>
+                    Architecture & Design</div>
+                <div class="tab-button" data-section="section-project-management"><i class="fas fa-tasks"></i> Project
+                    Management</div>
+                <div class="tab-button" data-section="section-code-dev-review"><i class="fas fa-code"></i> Code & Review
+                </div>
             </div>
 
             <div class="metagpt-output-area" id="main-content-area">
