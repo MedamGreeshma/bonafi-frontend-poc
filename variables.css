@@ -1,0 +1,47 @@
+/* Base Styles */
+:root {
+  --blue: #0020bb;
+  --teal: #00ffbe;
+  --black: #111;
+  --purple: #6450ff;
+  --white: #fff;
+
+  /* Accent colors */
+  --accent-blue: #4a6fff;
+  --accent-blue-light: #6b88ff;
+  --accent-purple: #9c6bff;
+  --accent-purple-light: #b18cff;
+  --accent-teal: #3ddbd9;
+  --accent-teal-light: #5ef2f0;
+
+  /* Basics */
+  --error-color: #e94757;
+  --success-color: #00a859;
+  --info-color: #0dcaf0;
+
+  /* Grays */
+  --light-bg: #f8f9fa;
+  --white-bg: #ffffff;
+  --dark-bg: #1d1e20;
+  --border-color: #3e3e61;
+  --border-color-purple: var(--accent-purple);
+  --text-color: var(--white);
+  --text-muted: #767d83;
+  --code-bg: #222;
+  --sidebar-bg: var(--black);
+  --sidebar-width: 280px;
+
+  --text-code: #ededed;
+
+  --tab-selected: rgb(255, 255, 255, 0.2);
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+  /* Border Radius */
+  --border-radius: 6px;
+
+  /* Font family */
+  --font-family: "Karla", sans-serif;
+}

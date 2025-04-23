@@ -1,573 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CiklumGPT Live Runner & SDLC Generator</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <style>
-      /* CSS from previous combined version - keep as is */
-      :root {
-        --primary-color: #0d6efd;
-        /* Bootstrap Blue */
-        --primary-hover: #0b5ed7;
-        --secondary-color: #6c757d;
-        /* Gray */
-        --success-color: #198754;
-        /* Green */
-        --success-hover: #157347;
-        --error-color: #dc3545;
-        /* Red */
-        --info-color: #0dcaf0;
-        /* Cyan */
-        --light-bg: #f8f9fa;
-        --white-bg: #ffffff;
-        --border-color: #dee2e6;
-        --text-color: #212529;
-        --text-muted: #6c757d;
-        --code-bg: #f1f3f5;
-        --sidebar-bg: #ffffff;
-        --sidebar-width: 280px;
-        /* Adjusted for more items */
-        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
-          0 2px 4px -2px rgb(0 0 0 / 0.1);
-        --border-radius: 6px;
-      }
 
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CiklumGPT Live Runner & SDLC Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="live-runner.css" />
 
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-          "Segoe UI Symbol";
-        background-color: var(--light-bg);
-        color: var(--text-color);
-        line-height: 1.6;
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
+</head>
 
-      .container {
-        padding: 15px 25px;
-        flex-shrink: 0;
-      }
+<body>
+  <!-- Top Controls -->
+  <header class="header">
+    <h1 class="logo">
+      <a href="/index.html"><span class="accent">Bonafi</span>GPT
+      </a>
+    </h1>
+  </header>
 
-      h2 {
-        text-align: center;
-        color: #343a40;
-        margin-bottom: 15px;
-        font-weight: 500;
-        font-size: 1.5rem;
-      }
+  <div class="container">
+    <div class="input-area">
+      <textarea type="text" id="task-input"
+        placeholder="Enter project description for CiklumGPT & SDLC Docs">Create a snake game using pygame</textarea>
 
-      .input-area {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 15px;
-        align-items: center;
-        background-color: var(--white-bg);
-        padding: 12px 20px;
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--border-color);
-      }
-
-      #task-input {
-        flex-grow: 1;
-        padding: 10px 15px;
-        font-size: 0.95rem;
-        border: 1px solid var(--border-color);
-        border-radius: var(--border-radius);
-      }
-
-      #start-button {
-        padding: 10px 20px;
-        font-size: 0.95rem;
-        cursor: pointer;
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        border-radius: var(--border-radius);
-        transition: background-color 0.2s ease, opacity 0.2s ease;
-        white-space: nowrap;
-      }
-
-      #start-button:hover:not(:disabled) {
-        background-color: var(--primary-hover);
-      }
-
-      #start-button:disabled {
-        background-color: var(--secondary-color);
-        opacity: 0.7;
-        cursor: not-allowed;
-      }
-
-      .status-download-area {
-        background-color: #f1f3f5;
-        padding: 10px 20px;
-        border-radius: var(--border-radius);
-        margin-bottom: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        min-height: 40px;
-        border: 1px solid var(--border-color);
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .status-message {
-        font-size: 0.95rem;
-        font-weight: 500;
-        color: var(--text-muted);
-        margin: 0;
-        flex-shrink: 0;
-        transition: color 0.3s ease;
-      }
-
-      #all-download-links {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-
-      .download-link-area {
-        text-align: right;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-        opacity: 0;
-        visibility: hidden;
-        display: flex;
-        align-items: center;
-      }
-
-      .download-link-area.visible {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .download-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 12px;
-        color: white;
-        text-decoration: none;
-        border-radius: var(--border-radius);
-        font-weight: 500;
-        font-size: 0.85rem;
-        transition: background-color 0.2s ease;
-      }
-
-      /* Style for the original MetaGPT download link */
-      #metagpt-zip-download-link {
-        background-color: var(--success-color);
-      }
-
-      #metagpt-zip-download-link:hover {
-        background-color: var(--success-hover);
-      }
-
-      #brd-download-link,
-      #srs-download-link,
-      #usecase-download-link {
-        background-color: var(--info-color);
-      }
-
-      #brd-download-link:hover,
-      #srs-download-link:hover,
-      #usecase-download-link:hover {
-        background-color: #0aa3c2;
-      }
-
-      .main-layout {
-        display: flex;
-        flex-grow: 1;
-        overflow: hidden;
-        background-color: var(--white-bg);
-        border: 1px solid var(--border-color);
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow-md);
-      }
-
-      .sidebar {
-        width: var(--sidebar-width);
-        flex-shrink: 0;
-        background-color: var(--sidebar-bg);
-        border-right: 1px solid var(--border-color);
-        padding: 15px 0;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .sidebar-section-title {
-        padding: 10px 20px 5px 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-top: 10px;
-      }
-
-      .sidebar-section-title:first-of-type {
-        margin-top: 0;
-      }
-
-      .card {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: var(--text-muted);
-        cursor: pointer;
-        border-left: 4px solid transparent;
-        transition: background-color 0.15s ease, border-color 0.15s ease,
-          color 0.15s ease;
-        margin: 1px 10px;
-        border-radius: var(--border-radius);
-      }
-
-      .card i {
-        font-size: 0.95rem;
-        width: 18px;
-        text-align: center;
-        color: var(--secondary-color);
-        transition: color 0.15s ease;
-      }
-
-      .card:hover {
-        background-color: #eef2ff;
-        color: var(--primary-color);
-      }
-
-      .card:hover i {
-        color: var(--primary-color);
-      }
-
-      .card.active {
-        background-color: #e0e7ff;
-        border-left-color: var(--primary-color);
-        color: var(--primary-color);
-        font-weight: 600;
-      }
-
-      .card.active i {
-        color: var(--primary-color);
-      }
-
-      .content-area {
-        flex-grow: 1;
-        padding: 20px 30px;
-        overflow-y: auto;
-        background-color: var(--white-bg);
-        position: relative;
-      }
-
-      .role-section {
-        display: none;
-      }
-
-      .role-section.active {
-        display: block;
-      }
-
-      .role-section h3 {
-        margin-top: 0;
-        margin-bottom: 15px;
-        padding-bottom: 8px;
-        color: var(--text-color);
-        font-size: 1.2rem;
-        font-weight: 600;
-        border-bottom: 1px solid var(--border-color);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .role-section h3 i {
-        color: var(--secondary-color);
-      }
-
-      .role-output {
-        overflow-y: visible;
-        font-size: 0.9rem;
-      }
-
-      .log-line {
-        color: var(--text-color);
-        margin: 1px 0;
-        padding: 1px 0;
-        line-height: 1.5;
-      }
-
-      .role-log-line {
-        font-weight: 600;
-        color: var(--primary-color);
-        margin: 10px 0 5px 0;
-        padding: 5px 0;
-        border-top: 1px dashed #e0e0e0;
-        font-size: 1em;
-      }
-
-      .role-log-line:first-child {
-        border-top: none;
-        margin-top: 0;
-      }
-
-      .content-start,
-      .content-end,
-      .code-start,
-      .code-review-start {
-        font-weight: 600;
-        margin: 12px 0 6px 0;
-        color: #0f766e;
-        font-size: 1.05em;
-      }
-
-      .code-start span.filename,
-      .code-review-start span.filename {
-        font-weight: 400;
-        font-style: italic;
-        color: var(--text-muted);
-        margin-left: 8px;
-      }
-
-      .code-block,
-      .content-block,
-      .code-review-block,
-      .sdd-output-block {
-        background-color: var(--code-bg);
-        border: 1px solid var(--border-color);
-        border-left: 4px solid var(--primary-color);
-        padding: 12px 18px;
-        margin: 10px 0 15px 0;
-        overflow-x: auto;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-          "Liberation Mono", "Courier New", monospace;
-        font-size: 0.875rem;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        border-radius: var(--border-radius);
-        line-height: 1.65;
-      }
-
-      .sdd-output-block {
-        border-left-color: var(--info-color);
-      }
-
-      .sdd-output-block.loading {
-        font-style: italic;
-        color: var(--text-muted);
-      }
-
-      .sdd-output-block.error {
-        border-left-color: var(--error-color);
-        color: var(--error-color);
-      }
-
-      .action-log-line {
-        color: var(--text-muted);
-        font-style: italic;
-        margin: 3px 0 3px 10px;
-        font-size: 0.9em;
-        padding: 2px 0;
-        position: relative;
-        padding-left: 15px;
-      }
-
-      .action-log-line::before {
-        content: "\f0da";
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
-        position: absolute;
-        left: 0;
-        top: 3px;
-        font-size: 0.8em;
-        color: var(--secondary-color);
-      }
-
-      .action-log-line .action-target {
-        font-weight: 500;
-        color: var(--text-color);
-      }
-
-      .original-role {
-        font-style: italic;
-        color: var(--text-muted);
-        font-size: 0.85em;
-        margin-left: 8px;
-      }
-
-      .status-message.process-end {
-        font-weight: 600;
-        color: var(--success-color);
-      }
-
-      .status-message.error-message {
-        font-weight: 600;
-        color: var(--error-color);
-      }
-
-      .log-line.error {
-        color: var(--error-color);
-        font-style: italic;
-        font-weight: 500;
-      }
-    </style>
-  </head>
-
-  <body>
-    <!-- Top Controls -->
-    <div class="container">
-      <h2>CiklumGPT Live Runner & SDLC Generator</h2>
-      <div class="input-area">
-        <input
-          type="text"
-          id="task-input"
-          placeholder="Enter project description for CiklumGPT & SDLC Docs"
-          value="Create a snake game using pygame"
-        />
-        <button id="start-button" onclick="startProcess()">
-          <i class="fas fa-play" style="margin-right: 6px"></i>Start Generation
-        </button>
+      <button id="start-button" onclick="startProcess()">
+        <i class="fa-solid fa-paper-plane" style="margin-right: 9px;"></i>Start
+      </button>
+    </div>
+    <div class="status-download-area">
+      <div class="status-message" id="status">
+        Enter project description and click Start
       </div>
-      <div class="status-download-area">
-        <div class="status-message" id="status">
-          Enter project description and click Start
+      <!-- Container for all download links -->
+      <div id="all-download-links">
+        <!-- Original MetaGPT download link area -->
+        <div id="download-link-area" class="download-link-area">
+          <a href="#" id="metagpt-zip-download-link" class="download-link" download>
+            <!-- Changed ID -->
+            <i class="fas fa-file-archive"></i> CiklumGPT ZIP
+          </a>
         </div>
-        <!-- Container for all download links -->
-        <div id="all-download-links">
-          <!-- Original MetaGPT download link area -->
-          <div id="download-link-area" class="download-link-area">
-            <a
-              href="#"
-              id="metagpt-zip-download-link"
-              class="download-link"
-              download
-            >
-              <!-- Changed ID -->
-              <i class="fas fa-file-archive"></i> CiklumGPT ZIP
-            </a>
-          </div>
-          <!-- SDLC download link areas -->
-          <div id="brd-download-link-area" class="download-link-area">
-            <a href="#" id="brd-download-link" class="download-link" download>
-              <i class="fas fa-file-word"></i> BRD.docx
-            </a>
-          </div>
-          <div id="srs-download-link-area" class="download-link-area">
-            <a href="#" id="srs-download-link" class="download-link" download>
-              <i class="fas fa-file-word"></i> SRS.docx
-            </a>
-          </div>
-          <div id="usecase-download-link-area" class="download-link-area">
-            <a
-              href="#"
-              id="usecase-download-link"
-              class="download-link"
-              download
-            >
-              <i class="fas fa-file-word"></i> UseCase.docx
-            </a>
-          </div>
+        <!-- SDLC download link areas -->
+        <div id="brd-download-link-area" class="download-link-area">
+          <a href="#" id="brd-download-link" class="download-link" download>
+            <i class="fas fa-file-word"></i> BRD.docx
+          </a>
+        </div>
+        <div id="srs-download-link-area" class="download-link-area">
+          <a href="#" id="srs-download-link" class="download-link" download>
+            <i class="fas fa-file-word"></i> SRS.docx
+          </a>
+        </div>
+        <div id="usecase-download-link-area" class="download-link-area">
+          <a href="#" id="usecase-download-link" class="download-link" download>
+            <i class="fas fa-file-word"></i> UseCase.docx
+          </a>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Main Layout -->
-    <div class="main-layout">
-      <!-- Sidebar (Combined) -->
-      <div class="sidebar">
-        <div class="sidebar-section-title">MetaGPT Output</div>
-        <div class="card active" data-section="section-system-logs">
-          <i class="fas fa-terminal"></i> System / Other Logs
-        </div>
-        <div class="card" data-section="section-product-management">
-          <i class="fas fa-file-alt"></i> Product Management
-        </div>
-        <div class="card" data-section="section-architecture-design">
-          <i class="fas fa-sitemap"></i> Architecture & Design
-        </div>
-        <div class="card" data-section="section-project-management">
-          <i class="fas fa-tasks"></i> Project Management
-        </div>
-        <div class="card" data-section="section-code-dev-review">
-          <i class="fas fa-code"></i> Code & Review
-        </div>
-
-        <div class="sidebar-section-title">SDLC Documents</div>
-        <div class="card" data-section="section-brd">
-          <i class="fas fa-book"></i> Business Requirements
-        </div>
-        <div class="card" data-section="section-srs">
-          <i class="fas fa-cogs"></i> System Requirements
-        </div>
-        <div class="card" data-section="section-usecase">
-          <i class="fas fa-users"></i> Use Cases
-        </div>
+  <!-- Main Layout -->
+  <div class="main-layout">
+    <!-- Sidebar (Combined) -->
+    <div class="sidebar">
+      <div class="sidebar-section-title">MetaGPT Output</div>
+      <div class="card active" data-section="section-system-logs">
+        <i class="fas fa-terminal"></i> System / Other Logs
+      </div>
+      <div class="card" data-section="section-product-management">
+        <i class="fas fa-file-alt"></i> Product Management
+      </div>
+      <div class="card" data-section="section-architecture-design">
+        <i class="fas fa-sitemap"></i> Architecture & Design
+      </div>
+      <div class="card" data-section="section-project-management">
+        <i class="fas fa-tasks"></i> Project Management
+      </div>
+      <div class="card" data-section="section-code-dev-review">
+        <i class="fas fa-code"></i> Code & Review
       </div>
 
-      <!-- Content Area (Combined) -->
-      <div class="content-area" id="main-content-area">
-        <!-- MetaGPT Sections -->
-        <div class="role-section active" id="section-system-logs">
-          <h3><i class="fas fa-terminal"></i> System / Other Logs</h3>
-          <div class="role-output" id="output-system-logs"></div>
-        </div>
-        <div class="role-section" id="section-product-management">
-          <h3><i class="fas fa-file-alt"></i> Product Management (PRD)</h3>
-          <div class="role-output" id="output-product-management"></div>
-        </div>
-        <div class="role-section" id="section-architecture-design">
-          <h3><i class="fas fa-sitemap"></i> Architecture & Design</h3>
-          <div class="role-output" id="output-architecture-design"></div>
-        </div>
-        <div class="role-section" id="section-project-management">
-          <h3><i class="fas fa-tasks"></i> Project Management (Tasks)</h3>
-          <div class="role-output" id="output-project-management"></div>
-        </div>
-        <div class="role-section" id="section-code-dev-review">
-          <h3><i class="fas fa-code"></i> Code Generation & Review</h3>
-          <div class="role-output" id="output-code-dev-review"></div>
-        </div>
+      <div class="sidebar-section-title">SDLC Documents</div>
+      <div class="card" data-section="section-brd">
+        <i class="fas fa-book"></i> Business Requirements
+      </div>
+      <div class="card" data-section="section-srs">
+        <i class="fas fa-cogs"></i> System Requirements
+      </div>
+      <div class="card" data-section="section-usecase">
+        <i class="fas fa-users"></i> Use Cases
+      </div>
+    </div>
 
-        <!-- SDLC Sections -->
-        <div class="role-section" id="section-brd">
+    <!-- Content Area (Combined) -->
+    <div class="content-area" id="main-content-area">
+      <!-- MetaGPT Sections -->
+      <div class="role-section active" id="section-system-logs">
+        <div class="panel-header">
+          <h3><i class="fas fa-terminal"></i> System / Other Logs</h3>
+        </div>
+        <div class="role-output" id="output-system-logs"></div>
+      </div>
+      <div class="role-section" id="section-product-management">
+        <div class="panel-header">
+
+          <h3><i class="fas fa-file-alt"></i> Product Management (PRD)</h3>
+        </div>
+        <div class="role-output" id="output-product-management"></div>
+      </div>
+      <div class="role-section" id="section-architecture-design">
+        <div class="panel-header">
+
+          <h3><i class="fas fa-sitemap"></i> Architecture & Design</h3>
+        </div>
+        <div class="role-output" id="output-architecture-design"></div>
+      </div>
+      <div class="role-section" id="section-project-management">
+        <div class="panel-header">
+
+          <h3><i class="fas fa-tasks"></i> Project Management (Tasks)</h3>
+        </div>
+        <div class="role-output" id="output-project-management"></div>
+      </div>
+      <div class="role-section" id="section-code-dev-review">
+        <div class="panel-header">
+
+          <h3><i class="fas fa-code"></i> Code Generation & Review</h3>
+        </div>
+        <div class="role-output" id="output-code-dev-review"></div>
+      </div>
+
+      <!-- SDLC Sections -->
+      <div class="role-section" id="section-brd">
+        <div class="panel-header-sdlc">
           <h3>
             <i class="fas fa-book"></i> Business Requirements Document (BRD)
           </h3>
-          <pre class="role-output sdd-output-block" id="output-BRD"></pre>
         </div>
-        <div class="role-section" id="section-srs">
+        <pre class="role-output sdd-output-block" id="output-BRD"></pre>
+      </div>
+      <div class="role-section" id="section-srs">
+        <div class="panel-header-sdlc">
           <h3>
             <i class="fas fa-cogs"></i> System Requirements Specification (SRS)
           </h3>
-          <pre class="role-output sdd-output-block" id="output-SRS"></pre>
         </div>
-        <div class="role-section" id="section-usecase">
+        <pre class="role-output sdd-output-block" id="output-SRS"></pre>
+      </div>
+      <div class="role-section" id="section-usecase">
+        <div class="panel-header-sdlc">
           <h3><i class="fas fa-users"></i> Use Case Document</h3>
-          <pre class="role-output sdd-output-block" id="output-UseCase"></pre>
         </div>
+        <pre class="role-output sdd-output-block" id="output-UseCase"></pre>
       </div>
     </div>
-    <script src="./scipt.js"></script>
-  </body>
+  </div>
+  <script src="./scipt.js"></script>
+</body>
+
 </html>

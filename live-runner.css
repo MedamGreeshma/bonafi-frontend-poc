@@ -1,0 +1,445 @@
+/* CSS from previous combined version - keep as is */
+@import url("./variables.css");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--black);
+  background: var(--black);
+  line-height: 1.6;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.container {
+  padding: 15px 25px;
+  flex-shrink: 0;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgb(55, 65, 81);
+  margin-bottom: 10px;
+}
+
+.header a {
+  text-decoration: none;
+  color: var(--text);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-color);
+}
+
+.accent {
+  color: var(--purple);
+}
+
+button {
+  font-family: "Karla", sans-serif;
+}
+
+.input-area {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  align-items: flex-end;
+  background-color: #6450ff16;
+  padding: 12px 20px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--purple);
+}
+
+#task-input {
+  flex-grow: 1;
+  padding: 10px 15px;
+  font-size: 0.95rem;
+  background: transparent;
+  border: none;
+  color: var(--white);
+  font-family: var(--font-family);
+}
+
+#task-input:focus {
+  outline: none;
+}
+
+#start-button {
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  background: linear-gradient(to right, var(--blue), var(--purple));
+  color: var(--text-color);
+  border: none;
+  border-radius: var(--border-radius);
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+#start-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+#start-button:disabled {
+  background-color: var(--text-muted);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.status-download-area {
+  background-color: var(--code-bg);
+  padding: 6px 16px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 40px;
+  border-left: 3px solid var(--success-color);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.status-message {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin: 0;
+  flex-shrink: 0;
+  transition: color 0.3s ease;
+}
+
+#all-download-links {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.download-link-area {
+  text-align: right;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.download-link-area.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  color: var(--white);
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: background-color 0.2s ease;
+}
+
+/* Style for the original MetaGPT download link */
+#metagpt-zip-download-link {
+  background-color: var(--success-color);
+}
+
+#metagpt-zip-download-link:hover {
+  background-color: var(--success-hover);
+}
+
+#brd-download-link,
+#srs-download-link,
+#usecase-download-link {
+  background-color: var(--success-color);
+}
+
+#brd-download-link:hover,
+#srs-download-link:hover,
+#usecase-download-link:hover {
+  opacity: 0.8;
+}
+
+.main-layout {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+  background-color: var(--white-bg);
+  /* border: 1px solid var(--border-color); */
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  padding: 15px 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-section-title {
+  padding: 10px 20px 5px 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 10px;
+}
+
+.sidebar-section-title:first-of-type {
+  margin-top: 0;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease;
+  margin: 1px 10px;
+  border-radius: var(--border-radius);
+}
+
+.card i {
+  font-size: 0.95rem;
+  width: 18px;
+  text-align: center;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+.card:hover {
+  background-color: rgb(255, 255, 255, 0.2);
+  color: var(--text-color);
+}
+
+.card:hover i {
+  color: var(--primary-color);
+}
+
+.card.active {
+  background-color: var(--tab-selected);
+  border-left-color: var(--teal);
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.card.active i {
+  color: var(--teal);
+}
+
+.content-area {
+  flex-grow: 1;
+  /* padding: 20px 30px; */
+  overflow-y: auto;
+  background-color: var(--dark-bg);
+  position: relative;
+}
+
+.role-section {
+  display: none;
+}
+
+.role-section.active {
+  display: block;
+}
+
+.role-section .panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #0a0a0b6b;
+  backdrop-filter: blur(4px);
+  border-bottom: 1px solid var(--border-color);
+  position: fixed;
+  width: 100%;
+}
+
+.role-section .panel-header-sdlc {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #0a0a0b6b;
+  backdrop-filter: blur(4px);
+  border-bottom: 1px solid var(--border-color);
+  /* position: absolute; */
+  width: 100%;
+}
+
+.role-section h3 {
+  color: var(--text-color);
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.role-section h3 i {
+  color: var(--secondary-color);
+}
+
+.role-section pre {
+  margin: 20px;
+}
+
+.role-output {
+  overflow-y: visible;
+  font-size: 0.9rem;
+  padding: 80px 20px 0;
+}
+
+.log-line {
+  color: var(--text-code);
+  margin: 1px 0;
+  padding: 1px 0;
+  line-height: 1.5;
+}
+
+.role-log-line {
+  font-weight: 600;
+  color: var(--info-color);
+  margin: 10px 0 5px 0;
+  padding: 5px 0;
+  border-top: 1px dashed var(--border-color);
+  font-size: 1em;
+}
+
+.role-log-line:first-child {
+  border-top: none;
+  margin-top: 0;
+}
+
+.content-start,
+.content-end,
+.code-start,
+.code-review-start {
+  font-weight: 600;
+  margin: 12px 0 6px 0;
+  color: var(--teal);
+  font-size: 1.05em;
+}
+
+.code-start span.filename,
+.code-review-start span.filename {
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-color);
+  margin-left: 8px;
+}
+
+.code-block,
+.content-block,
+.code-review-block,
+.sdd-output-block {
+  background-color: #31516035;
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--purple);
+  padding: 12px 18px;
+  margin: 10px 0 15px 0;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  border-radius: var(--border-radius);
+  line-height: 1.65;
+  color: var(--text-code);
+}
+
+.sdd-output-block {
+  border-left-color: var(--info-color);
+}
+
+.sdd-output-block.loading {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.sdd-output-block.error {
+  border-left-color: var(--error-color);
+  color: var(--error-color);
+}
+
+.action-log-line {
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 3px 0 3px 10px;
+  font-size: 0.9em;
+  padding: 2px 0;
+  position: relative;
+  padding-left: 15px;
+}
+
+.action-log-line::before {
+  content: "\f0da";
+  font-family: var(--font-family);
+  font-weight: 900;
+  position: absolute;
+  left: 0;
+  top: 3px;
+  font-size: 0.8em;
+  color: var(--purple);
+}
+
+.action-log-line .action-target {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.original-role {
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 0.85em;
+  margin-left: 8px;
+}
+
+.status-message.process-end {
+  font-weight: 600;
+  color: var(--success-color);
+}
+
+.status-message.error-message {
+  font-weight: 600;
+  color: var(--error-color);
+}
+
+.log-line.error {
+  color: var(--error-color);
+  font-style: italic;
+  font-weight: 500;
+}
