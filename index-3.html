@@ -317,7 +317,7 @@
 
         .role-log-line {
             font-weight: 600;
-            color: var(--primary-color);
+            color: var(--success-color);
             margin: 10px 0 5px 0;
             padding: 5px 0;
             border-top: 1px dashed #4a5568;
@@ -950,7 +950,7 @@
         // --- Function to Stream SDLC Documents (New Part - Output to File List) ---
         async function streamDocument(docType, outputIdKey) { // outputIdKey is 'brd', 'srs', 'usecase'
             // We don't stream text to a main area div anymore, just update the file list
-            const docKey = docType.replace(/ /g, '_').replace(/\//g, '_').replace(/\(|\)/g, ''); // Match backend key generation, remove parentheses
+            const docKey = docType.replace(/ /g, '_').replace(/\//g, '_') // Match backend key generation, remove parentheses
 
             // Add a placeholder item to the file list
             const listItem = document.createElement('li');
